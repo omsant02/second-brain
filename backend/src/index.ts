@@ -3,10 +3,9 @@ import express from "express"
 import jwt from "jsonwebtoken"
 import * as z from 'zod'
 import bcrypt from "bcrypt"
-import dotenv from "dotenv"
-import { userModel } from "./db.js";
-
-dotenv.config()
+import { contentModel, userModel } from "./db.js";
+import { JWT_SECRET } from "./config.js";
+import { userMiddleware } from "./middleware.js";
 
 const app = express();
 app.use(express.json())
@@ -14,7 +13,6 @@ app.use(express.json())
 if (!process.env.SECRET) {
     throw new Error("SECRET environment variable is not defined");
 }
-const JWT_SECRET = process.env.SECRET;
 
 //-------------------------------------------
 
@@ -86,23 +84,54 @@ app.post("/api/v1/signin", async (req, res) => {
         return
     }
 
-    const token = jwt.sign({userName}, JWT_SECRET)
+    const token = jwt.sign({
+        id: user._id
+    }, JWT_SECRET)
     res.json({
-        token: token
+        token: token,
+        message: "User signed in"
     })
 
 })
 
-app.post("/api/v1/content", (req, res) => {
+app.post("/api/v1/content", userMiddleware, async (req, res) => {
+    const { link, type } = req.body
 
+    const response = await contentModel.create({
+        link, type, userId: req.userId, tags: []
+    })
+
+    if(response) {
+        res.json({
+            message: "content added"
+        })
+    }
 })
 
-app.get("/api/v1/content", (req, res) => {
-
+app.get("/api/v1/content", userMiddleware, async (req, res) => {
+    const userId = req.userId;
+    const content = await contentModel.find({
+        userId
+    }).populate("userId", "userName")
+    
+    if(content) {
+        res.json({
+            content
+        })
+    }
 })
 
-app.delete("/api/v1/content", (req, res) => {
+app.delete("/api/v1/content", userMiddleware, async (req, res) => {
+    const contentId = req.body.contentId;
 
+    await contentModel.deleteMany({
+        _id: contentId,
+        userId: req.userId
+    })
+
+    res.json({
+        message: "Content Deleted"
+    })
 })
 
 app.post("/api/v1/brain/share", (req, res) => {

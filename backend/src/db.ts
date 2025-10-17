@@ -1,14 +1,8 @@
 import mongoose, {model, Schema} from "mongoose";
-import dotenv from "dotenv"
+import { DB_SECRET } from "./config.js";
+mongoose.connect(DB_SECRET)
 
-dotenv.config()
-
-if (!process.env.DB) {
-    throw new Error("SECRET environment variable is not defined");
-}
-const db_SECRET = process.env.DB;
-
-mongoose.connect(db_SECRET)
+//------------------------------------------------------------
 
 
 const userSchema = new Schema({
@@ -16,6 +10,14 @@ const userSchema = new Schema({
     password: String
 })
 
-const userModel = model("users", userSchema);
+const contentSchema = new Schema({
+    title: String,
+    link: String,
+    tags: [{type: mongoose.Types.ObjectId, ref: 'tags'}],
+    userId:  {type: mongoose.Types.ObjectId, ref: 'users', required: true }
+})
 
-export {userModel}
+const userModel = model("users", userSchema);
+const contentModel = model("contents", contentSchema);
+
+export {userModel, contentModel}
