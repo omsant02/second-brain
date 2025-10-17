@@ -1,5 +1,14 @@
 import mongoose, {model, Schema} from "mongoose";
-mongoose.connect("mongodb+srv://omsantoshwar02:12211221@cluster0.km70cna.mongodb.net/second-brain")
+import dotenv from "dotenv"
+
+dotenv.config()
+
+if (!process.env.DB) {
+    throw new Error("SECRET environment variable is not defined");
+}
+const db_SECRET = process.env.DB;
+
+mongoose.connect(db_SECRET)
 
 
 const userSchema = new Schema({
