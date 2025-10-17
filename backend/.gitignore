@@ -1,0 +1,86 @@
+# Node modules
+node_modules/
+# Optional npm cache folder
+.npm/
+
+# Logs
+logs/
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# Runtime data
+pids/
+*.pid
+*.seed
+*.pid.lock
+
+# Dependency directories
+jspm_packages/
+
+# Build output
+dist/
+build/
+out/
+lib/
+coverage/
+.nyc_output/
+*.tgz
+
+# Next.js, Nuxt, Gatsby, Vercel, Expo, Parcel etc.
+.next/
+.nuxt/
+.cache/
+.cache-loader/
+.parcel-cache/
+.vercel/
+.expo/
+.webpack/
+
+# Environment files
+.env
+.env.*.local
+.env.local
+.env.test
+.env.production
+
+# TypeScript
+*.tsbuildinfo
+
+# IDEs and editors
+.vscode/
+*.code-workspace
+.idea/
+*.sublime-workspace
+*.sublime-project
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Test & tooling
+coverage/
+.vscode-test/
+jest.config.*.local
+.storybook/
+
+# Misc
+*.log.*
+tmp/
+temp/
+*.swp
+.lock-wscript
+
+# Serverless / cloud build artifacts
+.serverless/
+.aws-sam/
+.sftp-config.json
+
+# Yarn Plug'n'Play (if you use it, you might want to keep .pnp.js committed instead)
+.pnp/
+.pnp.js
+
+# Local npm config (if you store credentials locally)
+.npmrc.local
