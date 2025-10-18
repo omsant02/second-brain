@@ -17,7 +17,13 @@ const contentSchema = new Schema({
     userId:  {type: mongoose.Types.ObjectId, ref: 'users', required: true }
 })
 
+const linkSchema = new Schema({
+    hash: String,
+    userId: {type: mongoose.Types.ObjectId, ref: 'users', required: true, unique: true}
+})
+
 const userModel = model("users", userSchema);
 const contentModel = model("contents", contentSchema);
+const linkModel = model("links", linkSchema)
 
-export {userModel, contentModel}
+export {userModel, contentModel, linkModel}

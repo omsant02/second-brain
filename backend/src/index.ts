@@ -3,9 +3,10 @@ import express from "express"
 import jwt from "jsonwebtoken"
 import * as z from 'zod'
 import bcrypt from "bcrypt"
-import { contentModel, userModel } from "./db.js";
+import { contentModel, linkModel, userModel } from "./db.js";
 import { JWT_SECRET } from "./config.js";
 import { userMiddleware } from "./middleware.js";
+import { random } from "./utils.js";
 
 const app = express();
 app.use(express.json())
@@ -134,12 +135,72 @@ app.delete("/api/v1/content", userMiddleware, async (req, res) => {
     })
 })
 
-app.post("/api/v1/brain/share", (req, res) => {
+app.post("/api/v1/brain/share", userMiddleware, async (req, res) => {
+    const share = req.body.share;
+    if(share) {
+        const existingLink = await linkModel.findOne({
+            userId: req.userId
+        })
 
+        if(existingLink) {
+            res.json({
+                hash: existingLink.hash
+            })
+            return;
+        }
+        const hash = random(10);
+        await linkModel.create({
+            userId: req.userId,
+            hash: hash
+        })
+
+        res.json({
+        message: "/share" + hash
+    })
+    } else {
+        linkModel.deleteOne({
+            userId: req.userId
+        })
+
+        res.json({
+        message: "Removed link"
+    })
+    }
 })
 
-app.get("/api/v1/brain/:shareLink", (req, res) => {
+app.get("/api/v1/brain/:shareLink", async (req, res) => {
+    const hash = req.params.shareLink;
 
+    const link = await linkModel.findOne({
+        hash
+    })
+
+    if(!link) {
+        res.status(411).json({
+            message: "incorrect input"
+        })
+        return;
+    }
+
+    const content = await contentModel.find({
+        userId: link.userId
+    })
+
+    const user = await userModel.findOne({
+        _id: link.userId
+    })
+
+    if(!user) {
+        res.status(411).json({
+            message: "user not found"
+        })
+        return;
+    }
+
+    res.json({
+        username: user.userName,
+        content: content
+    })
 })
 
 app.listen(3000, () => {
