@@ -4,12 +4,15 @@ import { Card } from "./components/Card";
 import { CreateContentModal } from "./components/CreateContentModal";
 import { PlusIcon } from "./icons/PlusIcon";
 import { ShareIcon } from "./icons/ShareIcon";
+import { Sidebar } from "./components/Sidebar";
 
 function App() {
   const [modalOpen, setModalOpen] = useState(false);
 
   return (
-    <div className="p-4">
+    <div>
+      <Sidebar/>
+      <div className="p-4 ml-72 min-h-screen bg-gray-100 border-2">
       <CreateContentModal
         open={modalOpen}
         onClose={() => setModalOpen(false)}
@@ -39,6 +42,7 @@ function App() {
           link="https://www.youtube.com/watch?v=4GESesYh3I4"
           title="kirat"
         />
+      </div>
       </div>
     </div>
   );
