@@ -8,7 +8,7 @@ export interface ButtonProps {
   text: string;
   startIcon?: ReactElement;
   endIcon?: ReactElement;
-  onclick?: () => void;
+  onClick?: () => void;
 }
 
 const variantClasses = {
@@ -24,14 +24,12 @@ const sizeStyles = {
 
 const defaultStyles = "px-4 py-2 rounded-md font-light flex items-center";
 
-export const Button = ({ variant, text, startIcon }: ButtonProps) => {
+export const Button = ({ variant, text, startIcon, onClick }: ButtonProps) => {
   return (
-    <button className={`${variantClasses[variant]} ${defaultStyles}`}>
+    <button onClick={onClick} className={`${variantClasses[variant]} ${defaultStyles}`}>
       <div className="pr-2">{startIcon}</div>
       
       {text}
     </button>
   );
 };
-
-<Button variant="primary" size="md" onclick={() => {}} text="asd" />;
